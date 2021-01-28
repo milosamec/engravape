@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server"
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefi frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -15,5 +18,8 @@
     "url": "https://github.com/milosamec/engravape/issues"
   },
   "homepage": "https://github.com/milosamec/engravape#readme",
-  "description": ""
+  "description": "shopping cart",
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
 }
