@@ -18,5 +18,8 @@
     "url": "https://github.com/milosamec/engravape/issues"
   },
   "homepage": "https://github.com/milosamec/engravape#readme",
-  "description": "shopping cart"
+  "description": "shopping cart",
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
 }
