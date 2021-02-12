@@ -6,7 +6,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listAllOrders } from '../actions/orderActions'
   
-const OrderListScreen = ({history, match}) => {
+const OrderListScreen = ({history}) => {
     const dispatch = useDispatch()
 
     const orderListAll = useSelector(state => state.orderListAll)
@@ -25,9 +25,6 @@ const OrderListScreen = ({history, match}) => {
         
     },[dispatch, history, userInfo])
 
-    const deleteHandler = (id) => {
-        // DELETE ORDER
-    }
 
     return (
         <>
