@@ -5,6 +5,7 @@ import {
     PRODUCT_DETAILS_REQUEST,
     PRODUCT_DETAILS_SUCCESS,
     PRODUCT_DETAILS_FAIL,
+    PRODUCT_DETAILS_RESET,
     PRODUCT_DELETE_REQUEST,
     PRODUCT_DELETE_SUCCESS,
     PRODUCT_DELETE_FAIL,
@@ -15,7 +16,6 @@ import {
     PRODUCT_UPDATE_REQUEST,
     PRODUCT_UPDATE_SUCCESS,
     PRODUCT_UPDATE_FAIL,
-    PRODUCT_UPDATE_RESET,
     PRODUCT_CREATE_REVIEW_REQUEST,
     PRODUCT_CREATE_REVIEW_SUCCESS,
     PRODUCT_CREATE_REVIEW_FAIL,
@@ -45,6 +45,8 @@ export const productDetailsReducer = (state = { product: { reviews: [] } }, acti
             return { loading: false, product: action.payload }
         case PRODUCT_DETAILS_FAIL:
             return { loading: false, error: action.payload }
+        case PRODUCT_DETAILS_RESET:
+            return { loading: false, product: { reviews: [] }}
         default:
             return state
     }
@@ -63,7 +65,7 @@ export const productDeleteReducer = (state = { }, action) => {
     }
 }
 
-export const productCreateReducer = (state = { }, action) => {
+export const productCreateReducer = (state = {}, action) => {
     switch(action.type) {
         case PRODUCT_CREATE_REQUEST:
             return { loading: true}
@@ -86,8 +88,6 @@ export const productUpdateReducer = (state = { product: {}}, action) => {
             return { loading: false, success: true, product:action.payload }
         case PRODUCT_UPDATE_FAIL:
             return { loading: false, error: action.payload }
-        case PRODUCT_UPDATE_RESET:
-            return { product: {} }
         default:
             return state
     }
