@@ -9,6 +9,9 @@ import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
+import pkg from 'cloudinary'
+
+const cloudinary = pkg
 
 dotenv.config()
 
@@ -20,7 +23,15 @@ if(process.env.NODE_ENV === "development") {
     app.use(morgan('dev'))
 }
 
+
+
 app.use(express.json())
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET
+})
 
 app.use('/api/products', productRoutes)
 app.use('/api/users', userRoutes)

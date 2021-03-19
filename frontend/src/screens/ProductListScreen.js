@@ -26,7 +26,6 @@ const ProductListScreen = ({history, match}) => {
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
 
-
     useEffect(() => {
         dispatch({ type: PRODUCT_CREATE_RESET })
 
@@ -82,7 +81,7 @@ const ProductListScreen = ({history, match}) => {
                   </thead>
                   <tbody>
                       {products.map(product => (
-                          <tr key={product.id}>
+                          <tr key={product._id}>
                             <td>{product._id}</td>
                             <td>{product.name}</td>
                             <td>${product.price}</td>
