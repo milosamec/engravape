@@ -6,25 +6,29 @@ import Message from '../components/Message'
 import { addToCart, removeFromCart } from '../actions/cartActions'
 
 const CartScreen = ({ match, location, history }) => {
+    // Grab product ID from params
     const productId = match.params.id
+    // Set qty variable by grabbing the qty from location.search query
     const qty = location.search ? Number(location.search.split('=')[1]) : 1
 
     const dispatch = useDispatch()
-
+    // Grab cart state
     const cart = useSelector(state => state.cart)
     const {cartItems} = cart
 
-
+    // Check if productID exists in params and dispatch addToCart with product ID and selected Qty
     useEffect(() => {
         if(productId) {
             dispatch(addToCart(productId, qty))
         }
     }, [dispatch, productId, qty])
 
+    // Remove product from cart on click
     const removeFromCartHandler = (id) => {
         dispatch(removeFromCart(id))
     }
-
+    
+    // Redirect user to shipping info screen if he's logged in
     const checkoutHandler = () => {
         history.push('/login?redirect=shipping')
     }
