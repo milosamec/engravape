@@ -10,18 +10,21 @@ import {createOrder} from '../actions/orderActions'
 const PlaceOrderScreen = ({history }) => {
     const dispatch = useDispatch()
     
+    // Grab cart from state
     const cart = useSelector(state => state.cart)
 
-
+    // Add decimals to products price on place order screen
     const addDecimals = (num) => {
         return (Math.round(num * 100) / 100).toFixed(2)
     }
     // Calculate Prices
     cart.itemsPrice = addDecimals(cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0))
 
+    // destructure orderCreate state
     const orderCreate = useSelector(state => state.orderCreate)
     const {order, success, error} = orderCreate
 
+    // If order has been successfully placed, push user to the order/orderId Page
     useEffect(() => {
         if (success) {
             history.push(`/order/${order._id}`)
@@ -29,6 +32,8 @@ const PlaceOrderScreen = ({history }) => {
         // eslint-disable-next-line
     }, [history, success])
 
+    // Create a place order handler
+    // Dispatch a createOrder action by sending an object with order details from state
     const placeOrderHandler = () => {
         dispatch(createOrder({
             orderItems: cart.cartItems,
