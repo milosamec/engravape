@@ -7,18 +7,21 @@ import {savePaymentMethod} from '../actions/cartActions'
 
 const PaymentScreen = ({history}) => {
 
+    // Grab cart state and destructure the shipping address
     const cart = useSelector(state => state.cart)
     const {shippingAddress} = cart
     
+    // If there is no shipping address, push user to shipping step
     if(!shippingAddress) {
         history.push('/shipping')
     }
-    console.log(shippingAddress)
-    
+    // set Payment Method state to PayPal as default
     const [paymentMethod, setPaymentMethod] = useState('PayPal')
     
     const dispatch = useDispatch()
 
+    // Save selected payment method by user to state by dispatching an action
+    // and push user to place order screen
     const submitHandler = (e) => {
         e.preventDefault()
         dispatch(savePaymentMethod(paymentMethod))
