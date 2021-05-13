@@ -8,22 +8,27 @@ import FormContainer from '../components/FormContainer'
 import {login} from '../actions/userActions'
 
 const LoginScreen = ({ location, history }) => {
+    // Set email and password state
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    // Save Redirect path
     const redirect = location.search ? location.search.split('=')[1] : '/'
 
     const dispatch = useDispatch()
 
+    // Grab user from state and destructure
     const userLogin = useSelector(state => state.userLogin)
     const {loading, error, userInfo} = userLogin
 
+    // If user is logged in - redirect to screen they tried to access before login
     useEffect(() => {
         if(userInfo) {
             history.push(redirect)
         }
     }, [history, userInfo, redirect])
 
+    // Dispatch user login action with email and pass
     const submitHandler = (e) => {
         e.preventDefault()
         dispatch(login(email, password))
