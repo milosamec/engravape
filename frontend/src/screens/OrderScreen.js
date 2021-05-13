@@ -12,40 +12,49 @@ import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from '../constants/orderConstant
 
 const OrderScreen = ({ history, match }) => {
 
+    // Grab order id from params
     const orderId = match.params.id
 
+    // set PayPal SDK state
     const [sdkReady, setSdkReady] = useState(false)
 
     const dispatch = useDispatch()
 
+    // Grab order details from state
     const orderDetails = useSelector(state => state.orderDetails)
     const {order, loading, error} = orderDetails
 
+    // Grab orderPay info from state
     const orderPay = useSelector(state => state.orderPay)
     const {loading:loadingPay, success:successPay} = orderPay
     
+    // Grab orderDeliver from state
     const orderDeliver = useSelector(state => state.orderDeliver)
     const {loading:loadingDeliver, success:successDeliver} = orderDeliver
 
+    // Grab user info from state
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
 
+    // If order details are back, calculate total with 2 decimals points .. 100.25
     if(!loading) {
         // Calculate Prices
         const addDecimals = (num) => {
             return (Math.round(num * 100) / 100).toFixed(2)
         }
+        // Set order items price by multiplying item price * qty - for each item
         order.itemsPrice = addDecimals(order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0))
     }
 
 
-    
+    // If user not logged in - push to login
     useEffect(() => {
 
         if (!userInfo) {
             history.push("/login")
         }
 
+        // PayPal script
         const addPaypalScript = async () => {
             const { data: clientId } = await axios.get('/api/config/paypal')
             const script = document.createElement('script')
@@ -53,34 +62,42 @@ const OrderScreen = ({ history, match }) => {
             script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
             script.async = true
             script.onload = () => {
+                // On screen load, set SDK ready to true
                 setSdkReady(true)
             }
-
+            // Append the script to the body
             document.body.appendChild(script)
         }
 
+        // Check order state if order has changed and reset old state
+        // Fetch new order details state
         if(!order || successPay || successDeliver) {
             dispatch({ type: ORDER_PAY_RESET })
             dispatch({ type: ORDER_DELIVER_RESET })
             dispatch(getOrderDetails(orderId))
+         // Check if order is not paid and if tehre is not paypal script
+            // And add the script to the window
         } else if (!order.isPaid) {
             if(!window.paypal) {
                 addPaypalScript()
             } else {
+                // Otherwise we set sdk State to true
                 setSdkReady(true)
             }
         }
 
     }, [dispatch, orderId, successPay, successDeliver, order, history, userInfo])
 
+    // Dispatch payOrder action that takes in the order id and paymentResult
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(orderId, paymentResult))
     }
 
+    // Dispatch deliver order action when order is marked as delivered/shipped
     const deliverHandler = () => {
         dispatch(deliverOrder(order))
     }
-
+    // if state is loading, show Loader else if anything else show error : otherwise show the order screen
     return loading ? <Loader /> : error ? <Message variant="danger">{error}</Message> : 
     
     <>
