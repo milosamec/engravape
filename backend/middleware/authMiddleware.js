@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+// Async handler package for use with express
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 
