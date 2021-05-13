@@ -12,16 +12,22 @@ import Meta from '../components/Meta'
 
 const HomeScreen = ({match}) => {
 
+    // Grab search keyword from params
     const keyword = match.params.keyword
 
+    // Grab pageNumber from params
     const pageNumber = match.params.pageNumber || 1
 
     const dispatch = useDispatch()
-
+    
+    // Grab product list from state
     const productList = useSelector(state => state.productList)
     
+    // Destructure product List state
     const { loading, error, products, page, pages } = productList
 
+    // Fetch products by keyword - this is used for search bar
+    // We check for keyword and pageNumber change
     useEffect(() => {
         dispatch(listProducts(keyword, pageNumber))
     }, [dispatch, keyword, pageNumber])
