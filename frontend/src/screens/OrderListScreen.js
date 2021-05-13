@@ -9,17 +9,21 @@ import { listAllOrders } from '../actions/orderActions'
 const OrderListScreen = ({history}) => {
     const dispatch = useDispatch()
 
+    // Grab all orders - must be admin
     const orderListAll = useSelector(state => state.orderListAll)
     const {loading:loadingOrders, error:errorOrders, orders} = orderListAll
 
+    // Grab user from satte
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
 
-
+  // Check if user is loged in and has an admin role
+    // If yes, let him see all the store orders
     useEffect(() => {
         if(userInfo && userInfo.isAdmin) {
             dispatch(listAllOrders())
         } else {
+          // Otherwise push him to login
             history.push('/login')
         }
         
