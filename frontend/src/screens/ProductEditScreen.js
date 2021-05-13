@@ -10,6 +10,7 @@ import { listProductDetails, updateProduct } from '../actions/productActions'
 import {PRODUCT_DETAILS_RESET, PRODUCT_UPDATE_RESET} from '../constants/productConstants'
 
 const ProductEditScreen = ({ match, history }) => {
+    // Set State for each label on product edit screen
     const productId = match.params.id
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -24,22 +25,28 @@ const ProductEditScreen = ({ match, history }) => {
 
     const dispatch = useDispatch()
 
+    // Grab product Details state
     const productDetails = useSelector(state => state.productDetails)
     const {loading, error, product} = productDetails
 
+    // Grab product Update state
     const productUpdate = useSelector(state => state.productUpdate)
     const {loading:loadingUpdate, error:errorUpdate, success:successUpdate} = productUpdate
 
     useEffect(() => {
-
+        // If product has been successfully updated, we want to reset the edit state
+        // And push user to product List screen
         if(successUpdate) {
             dispatch({type: PRODUCT_UPDATE_RESET})
             dispatch({type: PRODUCT_DETAILS_RESET})
             history.push('/admin/productlist')
         } else {
+            // If we're missing products name or product id does not match product id in params
             if(!product.name || product._id !== productId) {
+                // we dispatch an action to grab the product details
                 dispatch(listProductDetails(productId))
             } else {
+                // Otherwise we set the product edit local state to product info that was fetched from mongo
                 setName(product.name)
                 setPrice(product.price)
                 setImage(product.image)
@@ -49,7 +56,7 @@ const ProductEditScreen = ({ match, history }) => {
                 setDescription(product.description)
             }   
         }
-
+            // run useEffect if any of the below changes/updates
         }, [dispatch, history, productId, product, successUpdate])
 
     const uploadFileHandler = async (e) => {
@@ -75,6 +82,7 @@ const ProductEditScreen = ({ match, history }) => {
         }
     } 
 
+    // on Update - we want to dispatch the updateProduct action with local state and the product id from params
     const submitHandler = (e) => {
         e.preventDefault()
         dispatch(updateProduct({
